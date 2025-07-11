@@ -43,40 +43,70 @@ This project demonstrates how to remediate the STIG finding WN10-00-000090, whic
 
 ## ↺ 3. Undo Manual Fix (Test Reversion)
 
-* Re-checked "Password never expires" box for test user.
+
+  
+* Re-checked "Password never expires" box for test user. This will purposely
+  fail the scan on policy
+  
+<img width="1000" alt="image" src="https://i.imgur.com/7oW9a7Q.png">
+
+🔄 Why the User Is Prompted to Change Password
+During this STIG remediation lab, you may be prompted to change your password after enforcement. This is expected behavior and confirms the policy was applied correctly.
+
+Explanation:
+The STIG WN10-00-000090 requires that user accounts be configured with password expiration. When this setting is applied — particularly in a test environment where the password may be outdated or never set to expire — Windows will prompt the user to update their password on next login.
+
+This ensures:
+
+The policy is actively being enforced
+
+Passwords are not left unchanged indefinitely
+
+The system is compliant with best practices for password hygiene
+
+This password prompt can be considered visual confirmation that the policy has taken effect.
 
 
 <img width="1000" alt="image" src="https://i.imgur.com/7v55J58.png">
 
-<img width="1000" alt="image" src="https://i.imgur.com/7oW9a7Q.png">
+
 
 ---
 
 ## 💪 4. PowerShell Remediation
+```🔧 PowerShell Remediation Script
+To bring the system into compliance with STIG ID: WN10-00-000090 (Accounts must be configured to require password expiration), the following PowerShell script was used:
 
-```powershell
-# Get all local users except built-in disabled ones
-$users = Get-LocalUser | Where-Object { $_.Enabled -eq $true -and $_.Name -ne "Guest" }
+# Run this script in an elevated PowerShell session (Run as Administrator)
 
-# Set password expiration required
-foreach ($user in $users) {
-    wmic UserAccount where "Name='$($user.Name)'" set PasswordExpires=TRUE
-}
+# Force all local user accounts (except Administrator) to require password expiration
+wmic useraccount where "LocalAccount=True and Disabled=False and Name!='Administrator'" set PasswordExpires=True
+
+# Set the maximum password age to 60 days
+net accounts /maxpwage:60
+
+# Force Group Policy to apply the new settings
+gpupdate /force
+
+📌 What it does:
+
+✅ Ensures local user accounts are set to require password expiration
+
+🕒 Configures maximum password age to 60 days as required
+
+🔄 Applies changes immediately using gpupdate 
 ```
 
-* **Script Name:** `remediate-WN10-00-000090.ps1`
-* **Run:** As Administrator in PowerShell
-
-<img width="1000" alt="image" src="https://i.imgur.com/EdVdtYa.png">
+<img width="1000" alt="image" src="https://i.imgur.com/I8FoB9n.jpeg">
 
 ---
 
 ## 📊 Before & After
 
-| State      | Screenshot        |
-| ---------- | ----------------- |
-| **Before** | `initialfail.png` |
-| **After**  | `scriptpass.png`  |
+| State      | Screenshot                                                           |
+| ---------- | ---------------------------------------------------------------------                                                    |
+| **Before** | <img width="1000" alt="image" src="https://i.imgur.com/EdVdtYa.png">|
+| **After**  | <img width="1000" alt="image" src="https://i.imgur.com/LQUhaiF.png">|
 
 ---
 
