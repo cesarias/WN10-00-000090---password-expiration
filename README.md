@@ -33,22 +33,23 @@ This project demonstrates how to remediate the STIG finding WN10-00-000090, whic
    * Right-click and choose **Properties**
    * Uncheck **"Password never expires"**
 
-<img width="1000" alt="image" src="https://i.imgur.com/KFblpRX.png">
+<img width="1000" alt="image" src="https://i.imgur.com/m2EkGGF.png">
 
 * **Verification:** Reran Tenable scan — STIG marked **compliant**
 
-<img width="1000" alt="image" src="https://i.imgur.com/KFblpRX.png">
+<img width="1000" alt="image" src="https://i.imgur.com/oGKaUYG.png">
 
 ---
 
 ## ↺ 3. Undo Manual Fix (Test Reversion)
 
 * Re-checked "Password never expires" box for test user.
-* Reran scan to confirm STIG fails again.
 
 
-<img width="1000" alt="image" src="https://i.imgur.com/KFblpRX.png">
-<img width="1000" alt="image" src="https://i.imgur.com/KFblpRX.png">
+<img width="1000" alt="image" src="https://i.imgur.com/7v55J58.png">
+
+<img width="1000" alt="image" src="https://i.imgur.com/7oW9a7Q.png">
+
 ---
 
 ## 💪 4. PowerShell Remediation
